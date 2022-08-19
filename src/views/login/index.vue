@@ -58,7 +58,7 @@
 </template>
 
 <script>
-
+import { getNum } from '@/utils/auth'
 export default {
   name: 'Login',
   data() {
@@ -66,7 +66,11 @@ export default {
       loginForm: {
         loginName: 'admin',
         password: 'admin',
-        code: ''
+        code: '',
+        // mobile: '',
+        clientToken: '',
+        // account: '',
+        loginType: 0
       },
       loginRules: {
         loginName: [{ required: true, message: '请输入用户名', trigger: 'change' }],
@@ -88,14 +92,20 @@ export default {
       this.passwordType === 'password' ? this.passwordType = '' : this.passwordType = 'password'
     },
     changeCode() {
-      const randomNum = Math.floor(Math.random() * 10)
-      this.imgUrl = this.imgUrl + randomNum
+      this.loginForm.clientToken = getNum()
+      this.imgUrl = 'https://likede2-java.itheima.net/api/user-service/user/imageCode/'
+      this.imgUrl = this.imgUrl + this.loginForm.clientToken
     },
     async login() {
       try {
-        await this.refs.loginForm.validate()
+        await this.$refs.loginForm.validate()
+        this.loading = true
+        await this.$store.dispatch('user/login', this.loginForm)
+        this.$router.push('/')
       } catch (e) {
         console.log(e)
+      } finally {
+        this.loading = false
       }
     }
   }

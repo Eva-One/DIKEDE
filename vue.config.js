@@ -36,13 +36,13 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    // before: require('./mock/mock-server.js')
     proxy: {
       '/api': {
-        target: 'http://likede2-java.itheima.net/',
+        target: 'http://likede2-admin.itheima.net/likede',
         changeOrigin: true
       }
     }
+    // before: require('./mock/mock-server.js')
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
