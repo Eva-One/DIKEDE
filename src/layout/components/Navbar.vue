@@ -21,10 +21,10 @@
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
-            <el-dropdown-item>Home</el-dropdown-item>
+            <el-dropdown-item>首页</el-dropdown-item>
           </router-link>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display: block" @click="logout">Log Out</span>
+            <span style="display: block" @click="logout">登出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -106,7 +106,6 @@ export default {
       margin-right: 24px;
     }
     .user-avatar {
-          cursor: pointer;
           width: 40px;
           height: 40px;
           border-radius: 10px;
@@ -122,6 +121,7 @@ export default {
         color: #fff;
           span{
             font-size: 16px;
+            cursor: pointer;
           }
         .el-icon-caret-bottom {
           cursor: pointer;
