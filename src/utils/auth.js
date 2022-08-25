@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie'
 
 const TokenKey = 'dkt_token'
+const UserId = 'dkt_userid'
 
 export function getToken() {
   return Cookies.get(TokenKey)
@@ -12,6 +13,18 @@ export function setToken(token) {
 
 export function removeToken() {
   return Cookies.remove(TokenKey)
+}
+
+export function getId() {
+  return Cookies.get(UserId)
+}
+
+export function setId(Id) {
+  return Cookies.set(UserId, Id)
+}
+
+export function removeId() {
+  return Cookies.remove(UserId)
 }
 
 // 生成32位随机数

@@ -1,5 +1,8 @@
 import axios from 'axios'
+import store from '@/store'
 import { Message } from 'element-ui'
+
+// token失效还未处理
 
 // create an axios instance
 const service = axios.create({
@@ -9,21 +12,29 @@ const service = axios.create({
 })
 
 // request interceptor
-service.interceptors.request.use(
+service.interceptors.request.use((config) => {
+  if (store.getters.token) {
+    config.headers.Authorization = `${store.getters.token}`
+  }
+  return config
+}, error => {
+  return Promise.reject(error)
+}
 )
 
 // response interceptor
 service.interceptors.response.use(
   function(response) {
-    const { success, msg } = response.data
-    if (success) {
-      return response.data
+    const { status, data, statusText } = response
+    if (status === 200) {
+      return data
     }
-    Message.error(msg)
-    return Promise.reject(new Error(msg))
+    Message.error(statusText)
+    return Promise.reject(new Error(statusText))
   }, function(error) {
     Message.error(error.message)
     return Promise.reject(error)
-  })
+  }
+)
 
 export default service

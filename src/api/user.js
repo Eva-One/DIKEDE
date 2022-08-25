@@ -13,8 +13,15 @@ export function login(data) {
   })
 }
 
-export function getInfo(token) {
-
+/**
+ *获取用户信息
+ * @param {*} id 用户ID
+ * @returns Promise
+ */
+export function getInfo(id) {
+  return request({
+    url: `/user-service/user/${id}`
+  })
 }
 
 export function logout() {
