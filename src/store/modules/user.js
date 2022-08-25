@@ -6,7 +6,8 @@ export default {
   state: {
     token: getToken(),
     userId: getId(),
-    userInfo: {}
+    userInfo: {},
+    dktTime: ''
   },
   mutations: {
     SET_TOKEN(state, token) {
@@ -30,6 +31,9 @@ export default {
     },
     REMOVE_USERINFO(state) {
       state.userInfo = {}
+    },
+    SET_DKTTIME(state, time) {
+      state.dktTime = time
     }
   },
   actions: {
@@ -37,6 +41,7 @@ export default {
       const res = await login(data)
       commit('SET_TOKEN', res.token)
       commit('SET_USERID', res.userId)
+      commit('SET_DKTTIME', +new Date())
     },
 
     // 获取用户信息
