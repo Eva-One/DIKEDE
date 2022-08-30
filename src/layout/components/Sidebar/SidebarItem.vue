@@ -93,3 +93,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.router-link-exact-active{
+  color: #5f84ff;
+}
+</style>

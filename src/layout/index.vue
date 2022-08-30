@@ -1,6 +1,5 @@
 <template>
-  <div :class="classObj" class="app-wrapper">
-    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
+  <div class="app-wrapper openSidebar">
     <sidebar class="sidebar-container" />
     <div :class="{'fixed-header':fixedHeader}">
       <navbar />
@@ -24,9 +23,6 @@ export default {
   },
   mixins: [ResizeMixin],
   computed: {
-    sidebar() {
-      return this.$store.state.app.sidebar
-    },
     device() {
       return this.$store.state.app.device
     },
@@ -35,16 +31,8 @@ export default {
     },
     classObj() {
       return {
-        hideSidebar: !this.sidebar.opened,
-        openSidebar: this.sidebar.opened,
-        withoutAnimation: this.sidebar.withoutAnimation,
         mobile: this.device === 'mobile'
       }
-    }
-  },
-  methods: {
-    handleClickOutside() {
-      this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
     }
   }
 }
@@ -81,10 +69,6 @@ export default {
     z-index: 9;
     width: 100%;
     transition: width 0.28s;
-  }
-
-  .hideSidebar .fixed-header {
-    width: calc(100% - 54px)
   }
 
   .mobile .fixed-header {

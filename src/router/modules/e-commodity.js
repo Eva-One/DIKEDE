@@ -9,13 +9,13 @@ export default {
   children: [
     {
       path: 'type',
-      name: 'type',
+      name: 'commodity-type',
       component: () => import('@/views/commodity-type'),
       meta: { title: '商品类型' }
     },
     {
       path: 'manage',
-      name: 'manage',
+      name: 'commodity-manage',
       component: () => import('@/views/commodity-manage'),
       meta: { title: '商品管理' }
     }
