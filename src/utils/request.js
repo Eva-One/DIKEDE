@@ -42,7 +42,11 @@ service.interceptors.response.use(
     Message.error(statusText)
     return Promise.reject(new Error(statusText))
   }, function(error) {
-    Message.error(error.message)
+    if (error.response.data) {
+      Message.error(error.response.data)
+    } else {
+      Message.error(error.message)
+    }
     return Promise.reject(error)
   }
 )

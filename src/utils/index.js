@@ -8,6 +8,7 @@
  * @param {string} cFormat
  * @returns {string | null}
  */
+import moment from 'moment'
 export function parseTime(time, cFormat) {
   if (arguments.length === 0 || !time) {
     return null
@@ -114,4 +115,29 @@ export function param2Obj(url) {
     }
   })
   return obj
+}
+
+export const treeToArray = (tree) => {
+  tree.forEach(ele => {
+    const { sku } = ele
+    Object.keys(sku).forEach(item => {
+      ele[item] = sku[item]
+    })
+  })
+  return tree
+}
+
+// 处理工单状态
+export const ProcessingWorkOrderStatus = (data) => {
+  if (data.length > 0) {
+    data.forEach((ele) => {
+      ele.createType === 0 ? (ele.createType = '自动') : (ele.createType = '手动')
+      ele.updateTime = moment(ele.updateTime).utcOffset(8).format('YYYY.MM.DD HH:mm:ss')
+    })
+  } else {
+    data.createType === 0 ? (data.createType = '自动') : (data.createType = '手动')
+    data.updateTime = moment(data.updateTime).utcOffset(8).format('YYYY.MM.DD HH:mm:ss')
+    data.createTime = moment(data.createTime).utcOffset(8).format('YYYY.MM.DD HH:mm:ss')
+  }
+  return data
 }

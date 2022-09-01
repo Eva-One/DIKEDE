@@ -28,8 +28,8 @@
     <el-card
       shadow="always"
     >
-      <el-button type="primary" size="medium" icon="el-icon-search" style="background: linear-gradient(135deg,#ff9743,#ff5e20);border:none" @click="addOrderShow=true">新建</el-button>
-      <el-button type="primary" size="medium" class="allocationbtn" style="background-color: #fbf4f0;border:none;color: #655b56">工单配置</el-button>
+      <el-button type="primary" size="medium" icon="el-icon-circle-plus-outline" style="background: linear-gradient(135deg,#ff9743,#ff5e20);border:none" @click="addOrderShow=true">新建</el-button>
+      <el-button type="primary" size="medium" class="allocationbtn" style="background-color: #fbf4f0;border:none;color: #655b56" @click="orderSet">工单配置</el-button>
       <el-table
         :data="tableData"
         style="width: 100%"
@@ -68,8 +68,8 @@
           label="创建日期"
         />
         <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button type="text" @click="ViewDetails(scope)">查看详情</el-button>
+          <template slot-scope="{row}">
+            <el-button type="text" @click="ViewDetails(row)">查看详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -77,7 +77,13 @@
     </el-card>
 
     <!-- 新建工单弹出 -->
-    <AddNewOrder :dialog-visible.sync="addOrderShow" />
+    <AddNewOrder :dialog-visible.sync="addOrderShow" @refreshOrder="getOrderList" />
+
+    <!-- 工单配置弹出 -->
+    <OrderSet ref="orderSetAlert" :dialog-visible.sync="orderSetShow" @refreshOrder="getOrderList" />
+
+    <!-- 查看详情弹出 -->
+    <OrderDetail ref="orderDetail" :dialog-visible.sync="orderDetailShow" @refreshOrder="getOrderList" />
   </div>
 </template>
 
@@ -85,11 +91,16 @@
 import { getOrderList, getOrderStatus, searchOrder } from '@/api/operation'
 import BottomBtn from '@/components/BottomBtn'
 import AddNewOrder from './components/AddNewOrder.vue'
-import moment from 'moment'
+import OrderSet from './components/OrderSet.vue'
+import OrderDetail from './components/OrderDetail.vue'
+import { ProcessingWorkOrderStatus } from '@/utils'
+
 export default {
   components: {
     BottomBtn,
-    AddNewOrder
+    AddNewOrder,
+    OrderSet,
+    OrderDetail
   },
   data() {
     return {
@@ -98,6 +109,8 @@ export default {
         status: ''
       },
       addOrderShow: false,
+      orderSetShow: false,
+      orderDetailShow: false,
       orderStatus: [],
       getListData: {
         pageIndex: 1,
@@ -106,8 +119,7 @@ export default {
       },
       tableData: [],
       totalCount: null,
-      totalPage: null,
-      moment
+      totalPage: null
     }
   },
 
@@ -119,7 +131,7 @@ export default {
     async getOrderList(val) {
       this.getListData.pageIndex = val
       const { totalCount, totalPage, currentPageRecords } = await getOrderList(this.getListData)
-      this.tableData = this.ProcessingWorkOrderStatus(currentPageRecords)
+      this.tableData = ProcessingWorkOrderStatus(currentPageRecords)
       this.totalCount = parseInt(totalCount)
       this.totalPage = totalPage
     },
@@ -133,26 +145,30 @@ export default {
     async searchOrder() {
       try {
         const { totalCount, totalPage, currentPageRecords } = await searchOrder(this.formInline)
-        this.tableData = currentPageRecords
+        console.log(currentPageRecords)
+        this.tableData = ProcessingWorkOrderStatus(currentPageRecords)
         this.totalCount = parseInt(totalCount)
         this.totalPage = totalPage
       } catch (e) {
         console.log(e)
       }
     },
-    // 处理工单状态
-    ProcessingWorkOrderStatus(data) {
-      data.forEach((ele) => {
-        ele.createType === 0 ? (ele.createType = '自动') : (ele.createType = '手动')
-        ele.updateTime = this.moment(ele.updateTime).utcOffset(8).format('YYYY.MM.DD HH:mm:ss')
-      })
-      return data
+    orderSet() {
+      this.$refs.orderSetAlert.getSupplyAlert()
+      this.orderSetShow = true
+    },
+    ViewDetails(row) {
+      this.$refs.orderDetail.getWorkOrderDetail(row.taskId)
+      this.orderDetailShow = true
     }
   }
 }
 </script>
 
 <style lang="scss">
+.allocationbtn{
+  height: 34px;
+}
 .header-choose{
   height: 65px;
   margin-bottom: 20px;
