@@ -33,6 +33,9 @@
       <el-table
         :data="tableData"
         style="width: 100%"
+        header-row-class-name="my-table-header"
+        row-class-name="my-table-row"
+        class="my-table-main"
       >
         <el-table-column
           type="index"
@@ -66,6 +69,7 @@
         <el-table-column
           prop="updateTime"
           label="创建日期"
+          width="180px"
         />
         <el-table-column label="操作">
           <template slot-scope="{row}">
@@ -145,7 +149,6 @@ export default {
     async searchOrder() {
       try {
         const { totalCount, totalPage, currentPageRecords } = await searchOrder(this.formInline)
-        console.log(currentPageRecords)
         this.tableData = ProcessingWorkOrderStatus(currentPageRecords)
         this.totalCount = parseInt(totalCount)
         this.totalPage = totalPage
@@ -168,26 +171,5 @@ export default {
 <style lang="scss">
 .allocationbtn{
   height: 34px;
-}
-.header-choose{
-  height: 65px;
-  margin-bottom: 20px;
-  .el-card__body{
-    margin-top: 12px;
-    margin-left: 20px;
-    padding:unset;
-    .el-form-item{
-      margin-bottom: unset;
-      label{
-        font-weight: normal;
-      }
-    }
-  }
-}
-
-.el-table{
-  td {
-    border-bottom:unset
-  }
 }
 </style>

@@ -1,21 +1,23 @@
 import request from '@/utils/request'
 // 获取销售额
-export const GetSales = (start, end) => {
+export const GetSales = (start, end, innerCode) => {
   return request({
     url: `/order-service/report/orderAmount/`,
     params: {
-      start: start,
-      end: end
+      start,
+      end,
+      innerCode
     }
   })
 }
 // 获取
-export const GetOrderQuantity = (start, end) => {
+export const GetOrderQuantity = (start, end, innerCode) => {
   return request({
     url: `/order-service/report/orderCount/`,
     params: {
-      start: start,
-      end: end
+      start,
+      end,
+      innerCode
     }
   })
 }

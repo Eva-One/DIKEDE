@@ -41,15 +41,6 @@
             :span="8"
             :offset="2"
           ><div class="grid-content bg-purple">
-            补货数量：<el-button
-              type="text"
-              @click="showSupGoodsC"
-            >补货详情</el-button>
-          </div></el-col>
-          <el-col
-            :span="8"
-            :offset="2"
-          ><div class="grid-content bg-purple">
             工单方式：{{ orderInfo.createType }}
           </div></el-col>
           <el-col
@@ -121,15 +112,6 @@
             :span="10"
             :offset="2"
           ><div class="grid-content bg-purple">
-            补货数量：<el-button
-              type="text"
-              @click="showSupGoodsC"
-            >补货详情</el-button>
-          </div></el-col>
-          <el-col
-            :span="10"
-            :offset="2"
-          ><div class="grid-content bg-purple">
             工单方式：{{ orderInfo.createType }}
           </div></el-col>
           <el-col
@@ -150,20 +132,16 @@
       </div>
     </el-dialog>
 
-    <SupplyGoodsDetail ref="supGoodsDetail" :dialog-visible.sync="showSupGoods" />
-
     <AddNewOrder ref="addNewOrder" :dialog-visible.sync="showAddNewOrder" />
   </div>
 </template>
 
 <script>
-import { getWorkOrderDetail, cancelWorkOrder, getSupplyGoodsDetail } from '@/api/operation'
+import { getWorkOrderDetail, cancelWorkOrder } from '@/api/operation'
 import { ProcessingWorkOrderStatus } from '@/utils'
-import SupplyGoodsDetail from './SupplyGoodsDetail.vue'
 import AddNewOrder from './AddNewOrder.vue'
 export default {
   components: {
-    SupplyGoodsDetail,
     AddNewOrder
   },
   props: {
@@ -175,7 +153,6 @@ export default {
   data() {
     return {
       orderInfo: {},
-      showSupGoods: false,
       showAddNewOrder: false,
       taskId: null
     }
@@ -202,15 +179,11 @@ export default {
         console.log(e)
       }
     },
-    showSupGoodsC() {
-      this.$refs.supGoodsDetail.getSupplyGoodsDetail(this.orderInfo.taskId)
-      this.showSupGoods = true
-    },
     async reCreate() {
       this.$refs.addNewOrder.opOrderData = await getWorkOrderDetail(this.taskId)
+      this.$refs.addNewOrder.opOrderData.userId = 1
       this.$refs.addNewOrder.opOrderData.productType = this.orderInfo.taskType.typeId
-      this.$refs.addNewOrder.opOrderData.details = await getSupplyGoodsDetail(this.orderInfo.taskId)
-      await this.$refs.addNewOrder.getOperatePeopleList()
+      this.$refs.addNewOrder.getOperatePeopleList()
       this.showAddNewOrder = true
       this.$emit('update:dialog-visible', false)
     }

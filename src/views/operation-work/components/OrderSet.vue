@@ -55,6 +55,17 @@ export default {
 
 <style lang="scss">
 .order-set{
+   border-radius: 8px;
+  padding-left: 25px;
+  padding-right: 25px;
+  .el-dialog__header{
+      padding-left: 0;
+      .el-dialog__title{
+      font-size: 16px;
+      color: #333;
+      font-weight: bold;
+  }
+  }
   .el-dialog__body{
     padding-top:0;
     padding-bottom: 0;

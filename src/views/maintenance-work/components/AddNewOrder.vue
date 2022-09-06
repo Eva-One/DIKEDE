@@ -32,11 +32,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="补货数量：">
-          <el-button type="text" @click="showGoodsOrder">
-            <i class="el-icon-notebook-2" /> 补货清单</el-button>
-        </el-form-item>
-        <el-form-item label="运营人员:" prop="assignorId">
+        <el-form-item label="运维人员:" prop="assignorId">
           <el-select
             v-model="opOrderData.assignorId"
             filterable
@@ -60,18 +56,13 @@
       </el-form>
     </el-dialog>
 
-    <!-- 补货清单 -->
-    <AddGoodsOrder ref="goodsDetail" :dialog-visible.sync="showAddGoodsOrder" @setDetail="opOrderData.details=[...$event]" />
   </div>
 </template>
 
 <script>
-import { getOperatePeopleList, getOrderType, getAddGoodsOrder, createOrder } from '@/api/operation'
-import AddGoodsOrder from './AddGoodsOrder.vue'
+import { getOperatePeopleList, getOrderType, createOrder } from '@/api/operation'
 export default {
-  components: {
-    AddGoodsOrder
-  },
+
   props: {
     dialogVisible: {
       type: Boolean,
@@ -84,7 +75,6 @@ export default {
         createType: 1,
         innerCode: '',
         productType: null,
-        details: [],
         userId: 1,
         desc: '',
         assignorId: null
@@ -121,34 +111,18 @@ export default {
       this.opOrderData = {
         innerCode: '',
         productType: null,
-        details: [],
         userId: null,
         desc: ''
       }
     },
 
     async getOperatePeopleList() {
-      console.log(666)
       this.operatorList = await getOperatePeopleList(this.opOrderData.innerCode)
     },
 
     async getOrderType() {
       const res = await getOrderType()
-      this.orderType = res.filter(ele => ele.type === 2)
-    },
-
-    showGoodsOrder() {
-      this.$refs.addNewOrderForm.validateField('innerCode', async(val) => {
-        if (!val) {
-          this.showAddGoodsOrder = true
-          const data = await getAddGoodsOrder(this.opOrderData.innerCode)
-          data.forEach(ele => {
-            ele.expectCapacity = ele.maxCapacity - ele.currentCapacity
-            ele.expectCapacity1 = ele.maxCapacity - ele.currentCapacity
-          })
-          this.$refs.goodsDetail.goodsList = data
-        }
-      })
+      this.orderType = res.filter(ele => ele.type === 1)
     },
 
     // 按确认增加表单
